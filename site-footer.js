@@ -42,7 +42,7 @@
   };
   const TYPE_TO_SLUG = {
     'apartament': 'apartamente',
-    'casa': 'case', 'vila': 'case',
+    'casa': 'case', 'vila': 'case', 'casa / vila': 'case', 'casă / vilă': 'case',
     'teren': 'terenuri',
     'spatiu comercial': 'spatii-comerciale', 'spațiu comercial': 'spatii-comerciale',
     'birou': 'birouri',
@@ -51,12 +51,12 @@
   };
   const SLUG_TO_TYPE = {
     'apartamente': 'apartament',
-    'case': 'casa',
+    'case': 'casa / vila',
     'terenuri': 'teren',
     'spatii-comerciale': 'spatiu comercial',
     'birouri': 'birou',
     'hale': 'hala',
-    'hoteluri-pensiuni': 'apartament',
+    'hoteluri-pensiuni': 'hotel / pensiune',
     'proprietati': null
   };
   const CITY_SLUG_TO_NAME = {
