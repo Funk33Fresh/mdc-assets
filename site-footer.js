@@ -941,11 +941,14 @@
     document.addEventListener('mdc:favorite-changed', updateFavoriteCount);
     Logger.log('MDC site.js initialized');
   };
+  // Regex to detect clean results URLs like /apartamente-de-vanzare-cluj-napoca
+  const CLEAN_RESULTS_REGEX = /^\/(apartamente|apartament|case|casa|vila|proprietati|terenuri|teren|spatii-comerciale|spatiu-comercial|birouri|birou|hale|hala|hoteluri-pensiuni|hotel|pensiune)-de-(vanzare|inchiriere)-[a-z0-9-]+\/?$/i;
+
   const initRouter = () => {
     let page = document.documentElement.dataset.page;
     if (!page) {
       const path = window.location.pathname.toLowerCase();
-      if (path.includes('/results') || path.includes('/rezultate')) {
+      if (path.includes('/results') || path.includes('/rezultate') || CLEAN_RESULTS_REGEX.test(path)) {
         page = 'results';
       } else if (path.includes('/proprietate') || path.includes('/listing')) {
         page = 'listing';
