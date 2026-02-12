@@ -163,6 +163,12 @@
       } catch (e) {
         out.slug = pathMatch[1];
       }
+      // Extract crm_id from slug suffix (format: title-parts-<crm_id>)
+      const idMatch = out.slug.match(/-(\d+)$/);
+      if (idMatch) {
+        const id = parseInt(idMatch[1], 10);
+        if (Number.isFinite(id) && id > 0) out.crm_id = id;
+      }
     }
     const params = new URLSearchParams(search);
     const slugQ = params.get('slug');
