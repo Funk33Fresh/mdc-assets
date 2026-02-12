@@ -120,17 +120,24 @@
       parsed.transaction = parsed.transaction || 'any';
       return parsed;
     }
-    // Clean path: parse pathname "-de-" segments
+    // Clean path: /<type>-de-<transaction>-<city-slug>
+    // e.g. /apartamente-de-vanzare-floresti  → split('-de-') → ['apartamente', 'vanzare-floresti']
     const path = pathname.replace(/^\/+|\/+$/g, '');
     const parts = path ? path.split('-de-') : [];
     const result = { transaction: 'any', scope: 'any' };
-    if (parts.length >= 3) {
+    if (parts.length >= 2) {
       const typeSlug = parts[0];
-      const trSlug = parts[1];
-      const citySlug = parts.slice(2).join('-');
-      result.transaction = (trSlug === 'inchiriere') ? 'rent' : (trSlug === 'vanzare') ? 'sale' : 'any';
-      result.tip = SLUG_TO_TYPE[typeSlug] !== undefined ? SLUG_TO_TYPE[typeSlug] : (typeSlug === 'proprietati' ? null : typeSlug.replace(/-/g, ' '));
-      result.city = CITY_SLUG_TO_NAME[citySlug] || citySlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+      // Rejoin remaining parts (in case city has "-de-" in name, unlikely but safe)
+      const rest = parts.slice(1).join('-de-');
+      // rest = "vanzare-floresti" or "inchiriere-cluj-napoca"
+      const dashIdx = rest.indexOf('-');
+      if (dashIdx > 0) {
+        const trSlug = rest.substring(0, dashIdx);
+        const citySlug = rest.substring(dashIdx + 1);
+        result.transaction = (trSlug === 'inchiriere') ? 'rent' : (trSlug === 'vanzare') ? 'sale' : 'any';
+        result.tip = SLUG_TO_TYPE[typeSlug] !== undefined ? SLUG_TO_TYPE[typeSlug] : (typeSlug === 'proprietati' ? null : typeSlug.replace(/-/g, ' '));
+        result.city = CITY_SLUG_TO_NAME[citySlug] || citySlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+      }
     }
     const scope = getDecoded('scope') || get('scope');
     if (scope) result.scope = scope;
